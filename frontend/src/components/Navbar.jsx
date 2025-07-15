@@ -96,7 +96,7 @@ export default function Navbar() {
                     variant='contained'
                     sx={{ backgroundColor: "#00C28E", my: 1 }}
 
-                  >Admin Dashboard</Button>
+                  >Admin DashBoard</Button>
 
                   {/* )} */}
                   <Button

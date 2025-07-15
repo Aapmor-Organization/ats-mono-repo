@@ -62,5 +62,5 @@ deploy:
             docker run -d --name backend --env-file /home/ubuntu/backend.env -p 5000:5000 ghcr.io/$GHCR_USERNAME/ats-mono-repo-backend:latest
 
             # Run frontend
-            docker run -d --name frontend -p 3000:3000 ghcr.io/$GHCR_USERNAME/ats-mono-repo-frontend:latest
+            docker run -d --name frontend -p 80:3000 ghcr.io/$GHCR_USERNAME/ats-mono-repo-frontend:latest
           EOF 

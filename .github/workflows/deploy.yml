@@ -34,10 +34,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: ENV_FILES
     steps:
-      - name: Install SSH key
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Decode and install SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY_BASE64 }}" | base64 -d > id_rsa
+          chmod 600 id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add id_rsa
 
       - name: SSH into EC2 and deploy
         env:
@@ -45,7 +47,7 @@ jobs:
           GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
           ENV_FILES: ${{ secrets.ENV_FILES }}
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             echo "$ENV_FILES" > /home/ubuntu/backend.env
 
             docker login ghcr.io -u $GHCR_USERNAME -p $GHCR_TOKEN
